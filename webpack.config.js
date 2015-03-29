@@ -1,5 +1,6 @@
 var path = require("path");
 var webpack = require("webpack");
+var BowerWebpackPlugin = require("bower-webpack-plugin");
 
 module.exports = {
     entry: "./index.js",
@@ -21,21 +22,10 @@ module.exports = {
             { test: /jquery\.js$/, loader: "expose?jQuery" }
         ]
     },
-    resolve: {
-        alias: {
-	    "bootstrap": path.join(__dirname, "bower_components/bootstrap/dist/js/bootstrap.js"),
-	    "bootstrap.css": path.join(__dirname, "bower_components/bootstrap/dist/css/bootstrap.css"),
-	    "bootstrap-multiselect": path.join(__dirname, "bower_components/bootstrap-multiselect/dist/js/bootstrap-multiselect.js"),
-	    "bootstrap-multiselect.css": path.join(__dirname, "bower_components/bootstrap-multiselect/dist/css/bootstrap-multiselect.css"),
-        },
-        modulesDirectories: [
-            path.join(__dirname, "bower_components")
-        ]
-    },
     plugins: [
-        new webpack.ResolverPlugin(
-            new webpack.ResolverPlugin.DirectoryDescriptionFilePlugin(".bower.json", ["main"])
-        ),
+        new BowerWebpackPlugin({
+            excludes: /.*\.less/
+	}),
         new webpack.ProvidePlugin({
 	    $: "jquery",
             // multiselect が window.jQuery を参照しているため、expose-loader で jQuery を設定している
